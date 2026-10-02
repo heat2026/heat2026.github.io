@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models">
+  <meta name="description" content="HEAT trains a single end-to-end autonomous driving model jointly on heterogeneous domains (nuScenes, NAVSIM, Waymo) by organizing learning around planning trajectories and a trajectory-conditioned world model, yielding domain-invariant representations of driving intent.">
+  <meta name="keywords" content="autonomous driving, end-to-end driving, world model, multi-domain learning, heterogeneous domains, trajectory planning, nuScenes, NAVSIM, Waymo, representation learning">
+  <meta name="author" content="Hoonhee Cho, Giwon Lee, Jae-Young Kang, Hyemin Yang, Heejun Park, Kuk-Jin Yoon">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="HEAT Project Page">
+  <meta property="og:title" content="HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models">
+  <meta property="og:description" content="A trajectory-driven learning paradigm with a world model that lets one unified end-to-end driving model stay strong across heterogeneous domains.">
+  <meta property="og:url" content="https://heat2026.github.io/">
+  <meta property="og:image" content="https://heat2026.github.io/static/images/teaser.png">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="749">
+  <meta property="og:image:alt" content="HEAT - Trajectory-driven learning across heterogeneous driving domains">
+  <meta property="article:published_time" content="2026-01-01T00:00:00.000Z">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="Autonomous Driving">
+  <meta property="article:tag" content="World Models">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models">
+  <meta name="twitter:description" content="A trajectory-driven learning paradigm with a world model that lets one unified end-to-end driving model stay strong across heterogeneous domains.">
+  <meta name="twitter:image" content="https://heat2026.github.io/static/images/teaser.png">
+  <meta name="twitter:image:alt" content="HEAT - Trajectory-driven learning across heterogeneous driving domains">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models">
+  <meta name="citation_author" content="Cho, Hoonhee">
+  <meta name="citation_author" content="Lee, Giwon">
+  <meta name="citation_author" content="Kang, Jae-Young">
+  <meta name="citation_author" content="Yang, Hyemin">
+  <meta name="citation_author" content="Park, Heejun">
+  <meta name="citation_author" content="Yoon, Kuk-Jin">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_arxiv_id" content="2605.19631">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2605.19631">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#155d92">
+  <meta name="msapplication-TileColor" content="#155d92">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models</title>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico?v=1">
+  <link rel="icon" type="image/png" sizes="512x512" href="static/images/favicon-512.png?v=1">
+  <link rel="apple-touch-icon" href="static/images/favicon-180.png?v=1">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css?v=3">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js?v=3"></script>
+
+  <!-- Results table styling -->
+  <style>
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 0.75rem; }
+    .table-wrap table { font-size: 0.86rem; white-space: nowrap; }
+    .table-wrap table thead th { vertical-align: middle; text-align: center; }
+    .table-wrap table td, .table-wrap table th { text-align: center; }
+    .table-wrap table td:first-child, .table-wrap table th:first-child { text-align: left; white-space: nowrap; }
+    tr.ours { background: #eaf2f8; font-weight: 600; }
+    .table-note { font-size: 0.82rem; color: #6b7280; margin-top: -0.25rem; }
+    .het-tag { display:inline-block; background:#fff5eb; border:1px solid #f0d6b8; color:#8a5a20;
+               border-radius:4px; padding:0 0.4rem; font-size:0.78rem; font-weight:600; }
+  </style>
+
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models",
+    "description": "A trajectory-driven learning paradigm with a world model that lets one unified end-to-end driving model stay strong across heterogeneous domains.",
+    "author": [
+      { "@type": "Person", "name": "Hoonhee Cho", "affiliation": { "@type": "Organization", "name": "KAIST" } },
+      { "@type": "Person", "name": "Giwon Lee", "affiliation": { "@type": "Organization", "name": "KAIST" } },
+      { "@type": "Person", "name": "Jae-Young Kang", "affiliation": { "@type": "Organization", "name": "KAIST" } },
+      { "@type": "Person", "name": "Hyemin Yang", "affiliation": { "@type": "Organization", "name": "KAIST" } },
+      { "@type": "Person", "name": "Heejun Park", "affiliation": { "@type": "Organization", "name": "KAIST" } },
+      { "@type": "Person", "name": "Kuk-Jin Yoon", "affiliation": { "@type": "Organization", "name": "KAIST" } }
+    ],
+    "datePublished": "2026-01-01",
+    "url": "https://heat2026.github.io/",
+    "sameAs": "https://arxiv.org/abs/2605.19631",
+    "image": "https://heat2026.github.io/static/images/teaser.png",
+    "keywords": ["autonomous driving", "end-to-end driving", "world model", "multi-domain learning", "heterogeneous domains"],
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "about": [
+      { "@type": "Thing", "name": "Autonomous Driving" },
+      { "@type": "Thing", "name": "World Models" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title"><span style="color: #155d92;">HEAT</span>: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://chohoonhee.github.io/hoonheecho/" target="_blank">Hoonhee Cho</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="https://giwonlee00.github.io/" target="_blank">Giwon Lee</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="https://mickeykang16.github.io/" target="_blank">Jae-Young Kang</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="https://hemin0806.github.io/" target="_blank">Hyemin Yang</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="https://parkie0517.github.io/" target="_blank">Heejun Park</a><sup>*</sup>,</span>
+              <span class="author-block">Kuk-Jin Yoon<sup>&dagger;</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">KAIST<br>IEEE Robotics and Automation Letters (RA-L) 2026 <span style="color: #155d92; font-weight: 600;">(Under Review)</span></span>
+              <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution&nbsp;&nbsp;&nbsp;<sup>&dagger;</sup>Corresponding Author</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Paper -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2605.19631" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <!-- arXiv -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2605.19631" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="ai ai-arxiv"></i>
+                </span>
+                <span>arXiv</span>
+              </a>
+            </span>
+
+              <!-- Code -->
+              <span class="link-block">
+                <a href="https://github.com/heat2026/HEAT" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fab fa-github"></i>
+                </span>
+                <span>Code</span>
+              </a>
+            </span>
+              </div>
+              <div class="has-text-centered" style="margin-top: 0.75rem;">
+                <span class="tag is-warning is-light"><i class="fas fa-code" style="margin-right:0.35rem;"></i>Code will be released upon acceptance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+
+<!-- Teaser figure -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/teaser.png" alt="HEAT: trajectory-driven learning across heterogeneous driving domains" loading="lazy"/>
+      <h2 class="subtitle has-text-centered">
+        <strong>Driving across heterogeneous domains.</strong>
+        (a)&nbsp;Real deployments span different cities, camera rigs and traffic patterns. Existing end-to-end models
+        trained jointly on such a mixture degrade sharply compared to single-domain training.
+        (b)&nbsp;Motivated by how human drivers recall prior experience, HEAT groups driving experiences by their
+        <em>planning trajectory</em> rather than their appearance, and uses a world model to distill each group into a
+        visual prototype and an action memory that transfer behavioral knowledge across domains.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser figure -->
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            End-to-end autonomous driving has emerged as a compelling alternative to traditional modular pipelines by
+            directly mapping raw sensor data to driving actions. While recent approaches achieve strong performance on
+            single-domain datasets, their performance degrades significantly when trained jointly across multiple
+            heterogeneous domains. In practice, however, autonomous systems must operate across diverse environments with
+            heterogeneous distributions, including different cities, sensor configurations, and traffic patterns, without
+            domain-specific retraining. This gap highlights a key challenge in multi-domain learning: domain-specific
+            variations across heterogeneous domains introduce conflicting learning signals, driving models toward
+            compromised solutions that are suboptimal across domains.
+          </p>
+          <p>
+            To address this, we propose a <strong>trajectory-driven learning paradigm</strong> that organizes training
+            around planning trajectories, enabling the model to capture domain-invariant representations of driving
+            intent. Furthermore, we incorporate a <strong>world model</strong> that predicts future latent features
+            conditioned on ego actions, improving feature consistency and mitigating domain-induced biases. We evaluate
+            our approach on three benchmarks, nuScenes, NAVSIM, and the Waymo end-to-end dataset, and show substantial
+            improvements over existing methods across all domains. Our results demonstrate that a single unified model
+            can be trained on heterogeneous datasets while maintaining strong performance within each domain,
+            highlighting a step toward scalable real-world deployment.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Contributions -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Contributions</h2>
+        <div class="content has-text-justified">
+          <ul>
+            <li>
+              <strong>Trajectory-driven representation learning.</strong> We propose a learning paradigm that organizes
+              training around planning trajectories. By clustering data based on behavioral similarity and constructing
+              prototypes and an action memory, our framework encourages representations that capture driving behavior
+              beyond domain-specific appearances.
+            </li>
+            <li>
+              <strong>Heterogeneous-domain benchmark with superior performance.</strong> We establish a standardized
+              benchmark setting for end-to-end autonomous driving under heterogeneous domains, enabling fair and
+              reproducible evaluation across diverse datasets. Under this benchmark, our framework achieves strong
+              multi-domain generalization and robustness, substantially surpassing other methods and setting a solid
+              reference point for future research.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End contributions -->
+
+<!-- Method -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">The HEAT Framework</h2>
+        <div class="content has-text-centered">
+          <img src="static/images/method.png" alt="Overview of the three-stage HEAT framework" loading="lazy"/>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+            <strong>Overview of HEAT.</strong> HEAT is trained in three stages.
+            <strong>(a)&nbsp;Stage&nbsp;1 &mdash; World model training.</strong> A latent world model is pretrained on the
+            union of all domains. It concatenates each visual latent token with the flattened future ground-truth
+            trajectory to form <em>visual-coupled action latents</em>, and predicts the next frame's visual latents
+            self-supervised. Conditioning on trajectories, rather than only forecasting pixels, tightly couples
+            perception with control.
+          </p>
+          <p>
+            <strong>(b)&nbsp;Stage&nbsp;2 &mdash; Trajectory-guided behavior clustering.</strong> Samples from all domains
+            are clustered by their ground-truth waypoints with K-Means into <em>M</em> behavior clusters. Each cluster is
+            summarized into a token-level <em>trajectory-guided visual prototype</em> and a <em>visual-coupled action
+            memory</em>. Visually different scenes that demand the same maneuver end up in the same cluster, so these
+            priors carry behavior rather than appearance.
+          </p>
+          <p>
+            <strong>(c)&nbsp;Stage&nbsp;3 &mdash; E2E-AD training.</strong> A perception-free driving model is trained from
+            scratch using those priors: a contrastive objective aligns its visual latents with the trajectory-guided
+            prototypes (CLTP), and episodic memory-based action refinement (EMAR) retrieves action features to refine the
+            predicted waypoints. The world model itself is discarded, so inference costs nothing extra.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End method -->
+
+<!-- Results -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <h2 class="title is-3 has-text-centered">Results</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            All models below are trained <span class="het-tag">jointly on nuScenes + NAVSIM + Waymo</span> and evaluated on
+            each domain with a single shared checkpoint.
+          </p>
+        </div>
+
+        <h3 class="title is-5">Open-loop planning under heterogeneous training</h3>
+        <div class="table-wrap">
+          <table class="table is-fullwidth is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th rowspan="2">Method</th>
+                <th colspan="2">nuScenes</th>
+                <th>NAVSIM</th>
+                <th>Waymo</th>
+                <th rowspan="2">Avg. of<br>L2 Avg. &darr;</th>
+              </tr>
+              <tr>
+                <th>L2 Avg. (m) &darr;</th>
+                <th>Col. Avg. (%) &darr;</th>
+                <th>L2 Avg. (m) &darr;</th>
+                <th>L2 Avg. (m) &darr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>LTF</td><td>2.96</td><td>1.10</td><td>2.06</td><td>3.78</td><td>2.93</td></tr>
+              <tr><td>BEVPlanner</td><td>2.88</td><td>5.16</td><td>3.57</td><td>3.50</td><td>3.32</td></tr>
+              <tr><td>BEVPlanner++</td><td>0.38</td><td>0.44</td><td>0.38</td><td>0.58</td><td>0.45</td></tr>
+              <tr><td>LAW</td><td>0.83</td><td>0.48</td><td>1.21</td><td>2.46</td><td>1.50</td></tr>
+              <tr class="ours"><td>HEAT (Ours)</td><td>0.35</td><td>0.17</td><td>0.22</td><td>0.68</td><td>0.42</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          L2 and collision rates are averaged over the 1s, 2s and 3s horizons. HEAT gives the best average L2 across all
+          three domains at once, and cuts NAVSIM L2 by 42% relative to the strongest baseline.
+        </p>
+
+        <br>
+        <h3 class="title is-5">Closed-loop planning on NAVSIM</h3>
+        <div class="table-wrap">
+          <table class="table is-fullwidth is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>Method</th><th>Train data</th>
+                <th>NC &uarr;</th><th>DAC &uarr;</th><th>EP &uarr;</th><th>TTC &uarr;</th><th>Comf. &uarr;</th><th>PDMS &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Human</td><td>&ndash;</td><td>100</td><td>100</td><td>87.5</td><td>100</td><td>99.9</td><td>94.8</td></tr>
+              <tr><td>LAW</td><td>NAVSIM only</td><td>96.4</td><td>95.4</td><td>81.7</td><td>88.7</td><td>99.9</td><td>84.6</td></tr>
+              <tr><td>LTF</td><td>S + N + W</td><td>92.4</td><td>83.8</td><td>36.4</td><td>87.6</td><td>81.3</td><td>55.6</td></tr>
+              <tr><td>BEVPlanner++</td><td>S + N + W</td><td>94.4</td><td>80.1</td><td>66.2</td><td>86.7</td><td>100.0</td><td>69.6</td></tr>
+              <tr><td>LAW</td><td>S + N + W</td><td>93.7</td><td>83.9</td><td>69.7</td><td>86.4</td><td>98.4</td><td>72.3</td></tr>
+              <tr class="ours"><td>HEAT (Ours)</td><td>S + N + W</td><td>97.7</td><td>93.9</td><td>80.2</td><td>93.0</td><td>100.0</td><td>85.2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          NC: no at-fault collision. DAC: drivable area compliance. EP: ego progress. TTC: time-to-collision.
+          PDMS: predictive driver model score. Baselines lose 12&ndash;29 PDMS when moved from single-domain to
+          heterogeneous training; HEAT trained on all three domains still <em>exceeds</em> LAW trained on NAVSIM alone.
+        </p>
+
+        <br>
+        <h3 class="title is-5">Ablation</h3>
+        <div class="table-wrap">
+          <table class="table is-fullwidth is-bordered is-narrow">
+            <thead>
+              <tr>
+                <th>CLTP</th><th>EMAR</th>
+                <th>NAVSIM PDMS &uarr;</th>
+                <th>nuScenes L2 Avg. &darr;</th>
+                <th>nuScenes Col. Avg. &darr;</th>
+                <th>Waymo L2 Avg. &darr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>&#10007;</td><td>&#10007;</td><td>71.4</td><td>0.90</td><td>0.55</td><td>2.48</td></tr>
+              <tr><td>&#10003;</td><td>&#10007;</td><td>78.0</td><td>0.79</td><td>0.44</td><td>2.18</td></tr>
+              <tr><td>&#10007;</td><td>&#10003;</td><td>82.8</td><td>0.42</td><td>0.53</td><td>0.70</td></tr>
+              <tr class="ours"><td>&#10003;</td><td>&#10003;</td><td>85.2</td><td>0.35</td><td>0.17</td><td>0.68</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">
+          CLTP: Contrastive Learning with Trajectory-guided Prototype. EMAR: Episodic Memory-based Action Refinement.
+          Each component helps on its own, and the two are complementary.
+        </p>
+
+        <br>
+        <div class="content has-text-justified">
+          <p>
+            <strong>Setup.</strong> Swin-Transformer-Tiny backbone, 640&times;384 input, AdamW with cosine annealing from
+            5e-5, batch size 8, 18 epochs on 8&times;RTX 3090. Waypoints are sampled at 2&nbsp;Hz over a 4-second horizon
+            and the number of behavior clusters is <em>M</em>&nbsp;=&nbsp;18.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End results -->
+
+<!-- Qualitative carousel -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3 has-text-centered">Analysis</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <img src="static/images/qualitative.png" alt="Qualitative planning comparison against LAW on three datasets" loading="lazy"/>
+          <h2 class="subtitle has-text-centered">
+            Qualitative planning results from a single heterogeneously trained checkpoint. Across nuScenes, NAVSIM and
+            Waymo, HEAT's predicted trajectory tracks the ground truth more closely than LAW.
+          </h2>
+        </div>
+        <div class="item">
+          <img src="static/images/clusters.png" alt="Trajectory-guided behavior clusters" loading="lazy"/>
+          <h2 class="subtitle has-text-centered">
+            Trajectory-guided behavior clusters. K-Means over ground-truth waypoints yields interpretable maneuver
+            groups (left / straight / right at varying curvature) that are shared across all three domains.
+          </h2>
+        </div>
+        <div class="item">
+          <img src="static/images/umap.png" alt="UMAP of visual and action latents" loading="lazy"/>
+          <h2 class="subtitle has-text-centered">
+            UMAP of visual latents (top) and action latents (bottom), colored by behavior cluster. The baseline mixes
+            behaviors together; adding contrastive prototype alignment and action refinement progressively separates
+            them, so the learned space is organized by driving intent rather than by domain.
+          </h2>
+        </div>
+        <div class="item">
+          <img src="static/images/attention.png" alt="Episodic memory attention weights" loading="lazy"/>
+          <h2 class="subtitle has-text-centered">
+            Episodic memory-based action refinement. The retrieval weights concentrate on the memory slot matching the
+            maneuver actually required (Straight for (a), Right for (b)), and the refined trajectory lands closer to the
+            ground truth than without refinement.
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End qualitative carousel -->
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title" style="margin-bottom: 0;">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX">
+          <i class="fas fa-copy"></i><span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre><code id="bibtex-code">@misc{cho2026heat,
+  title={HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models},
+  author={Hoonhee Cho and Giwon Lee and Jae-Young Kang and Hyemin Yang and Heejun Park and Kuk-Jin Yoon},
+  year={2026},
+  eprint={2605.19631},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  url={https://arxiv.org/abs/2605.19631}
+}</code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+<!-- Related Work -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">Our Related Work</h2>
+        <div class="content has-text-justified">
+          <p>
+            <a href="https://vips2026.github.io/" target="_blank"><strong>VIPS: Vehicle-Infrastructure Cooperative Planning Benchmark via Pseudo-Simulation</strong></a>
+            (ECCV 2026, Spotlight). Hoonhee Cho<sup>*</sup>, Jae-Young Kang<sup>*</sup>, Giwon Lee<sup>*</sup>, Hyemin Yang<sup>*</sup>, Heejun Park<sup>*</sup>, Kuk-Jin Yoon<sup>&dagger;</sup>.
+            A benchmark for cooperative V2I autonomous driving via pseudo-simulation, together with CoS-V2X, a sparse cooperative planning framework.
+            [<a href="https://vips2026.github.io/" target="_blank">Project</a>]
+            [<a href="https://arxiv.org/abs/2609.02462" target="_blank">arXiv</a>]
+            [<a href="https://github.com/mickeykang16/VIPS" target="_blank">Code</a>]
+          </p>
+          <p>
+            <a href="https://vrdriveneurips.github.io/" target="_blank"><strong>VR-Drive: Viewpoint-Robust End-to-End Driving with Feed-Forward 3D Gaussian Splatting</strong></a>
+            (NeurIPS 2025). Hoonhee Cho<sup>*</sup>, Jae-Young Kang<sup>*</sup>, Giwon Lee<sup>*</sup>, Hyemin Yang<sup>*</sup>, Heejun Park, Seokwoo Jung, Kuk-Jin Yoon.
+            A viewpoint-robust end-to-end driving framework that leverages feed-forward 3D Gaussian Splatting to synthesize novel views for robust planning.
+            [<a href="https://vrdriveneurips.github.io/" target="_blank">Project</a>]
+            [<a href="https://arxiv.org/abs/2510.23205" target="_blank">arXiv</a>]
+            [<a href="https://github.com/mickeykang16/VR-Drive" target="_blank">Code</a>]
+          </p>
+          <p>
+            <a href="https://tudneurips2026.github.io/" target="_blank"><strong>TUD: Triggering Generalist Reasoning via Predictive Uncertainty for Dual-System VLA</strong></a>
+            (NeurIPS 2026). Hyemin Yang<sup>*</sup>, Wooseong Jeong<sup>*</sup>, Giwon Lee<sup>*</sup>, Kuk-Jin Yoon.
+            An adaptive inference framework that decides <em>when</em> a dual-system vision-language-action model should re-invoke its generalist, using the dispersion of the specialist's own action re-predictions.
+            [<a href="https://tudneurips2026.github.io/" target="_blank">Project</a>]
+          </p>
+          <p class="has-text-grey" style="font-size: 0.85rem;">
+            <sup>*</sup>Equal Contribution&nbsp;&nbsp;&nbsp;<sup>&dagger;</sup>Corresponding Author
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Related Work -->
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </main>
+  </body>
+  </html>
