@@ -1,7 +1,7 @@
 # HEAT — Project Page
 
 Project page for **HEAT: Heterogeneous End-to-End Autonomous Driving via Trajectory-Guided World Models**
-(IEEE RA-L 2026, under review).
+(IEEE RA-L 2026).
 
 Live site: https://heat2026.github.io/
 
@@ -45,7 +45,8 @@ sed -i 's/heat2026\.github\.io/YOURNAME.github.io/g' index.html
       replace the `<span class="button is-normal is-rounded is-coming-soon" ...>` with
       `<a href="..." target="_blank" class="external-link button is-normal is-rounded is-dark">` and drop the
       "(Coming Soon)" suffix.
-- [ ] Update the venue line in the hero once the paper is accepted.
+- [x] Accepted to IEEE RA-L 2026; hero venue line, BibTeX and `citation_journal_title` updated accordingly.
+- [ ] Add `volume`, `number`, `pages` and `doi` to the BibTeX entry once IEEE assigns them.
 
 ## Layout
 
