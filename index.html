@@ -102,6 +102,18 @@
     .table-wrap table td:first-child, .table-wrap table th:first-child { text-align: left; white-space: nowrap; }
     tr.ours { background: #eaf2f8; font-weight: 600; }
     .table-note { font-size: 0.82rem; color: #6b7280; margin-top: -0.25rem; }
+    /* Disabled "coming soon" link buttons */
+    .link-block .button.is-coming-soon {
+      margin: 8px 4px;
+      background: #d1d5db !important;
+      color: #6b7280 !important;
+      border: none !important;
+      box-shadow: none !important;
+      cursor: not-allowed;
+      pointer-events: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     .het-tag { display:inline-block; background:#fff5eb; border:1px solid #f0d6b8; color:#8a5a20;
                border-radius:4px; padding:0 0.4rem; font-size:0.78rem; font-weight:600; }
   </style>
@@ -192,16 +204,15 @@
               </a>
             </span>
 
-              <!-- Code -->
+              <!-- Code (not released yet) -->
               <span class="link-block">
-                <a href="https://github.com/heat2026/HEAT" target="_blank"
-                class="external-link button is-normal is-rounded is-dark">
-                <span class="icon">
-                  <i class="fab fa-github"></i>
+                <span class="button is-normal is-rounded is-coming-soon" aria-disabled="true" title="Code is not released yet">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming Soon)</span>
                 </span>
-                <span>Code</span>
-              </a>
-            </span>
+              </span>
               </div>
               <div class="has-text-centered" style="margin-top: 0.75rem;">
                 <span class="tag is-warning is-light"><i class="fas fa-code" style="margin-right:0.35rem;"></i>Code will be released upon acceptance</span>
