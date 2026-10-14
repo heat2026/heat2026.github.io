@@ -41,10 +41,7 @@ sed -i 's/heat2026\.github\.io/YOURNAME.github.io/g' index.html
 
 - [x] arXiv ID `2605.19631` verified against the live arXiv listing.
 - [ ] Confirm the author order and the equal-contribution / corresponding-author marks (the submitted LaTeX has the author block commented out).
-- [ ] The **Code** button is a disabled "Coming Soon" chip. Once the repo is public, turn it back into a link:
-      replace the `<span class="button is-normal is-rounded is-coming-soon" ...>` with
-      `<a href="..." target="_blank" class="external-link button is-normal is-rounded is-dark">` and drop the
-      "(Coming Soon)" suffix.
+- [x] **Code** button links to the official repository, https://github.com/GiwonLee00/HEAT_RAL.
 - [x] Accepted to IEEE RA-L 2026; hero venue line, BibTeX and `citation_journal_title` updated accordingly.
 - [ ] Add `volume`, `number`, `pages` and `doi` to the BibTeX entry once IEEE assigns them.
 
